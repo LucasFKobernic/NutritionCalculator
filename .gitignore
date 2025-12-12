@@ -1,0 +1,19 @@
+build/
+.vscode/
+.idea/
+
+# Ignore CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Ignore binaries
+*.exe
+*.out
+*.o
+*.obj
+*.so
+*.dll
+*.dylib
+.DS_Store
