@@ -4,18 +4,25 @@
 
 cmake_minimum_required(VERSION 3.16)
 
-set(CMAKE_CXX_STANDARD 23)
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
 project(
-    nutrition_calculator
-    VERSION 1.0.0
-    DESCRIPTION "App that calculates Nutrition Values for Recipes"
-    LANGUAGES CXX
+        nutrition_calculator
+        VERSION 1.0.0
+        DESCRIPTION "App that calculates Nutrition Values for Recipes"
+        LANGUAGES CXX
 )
 
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+if(APPLE)
+    # find OpenMP package
+    list(APPEND CMAKE_PREFIX_PATH "/opt/homebrew/opt/libomp")
+    find_package(OpenMP REQUIRED)
+elseif(WIN32)
+    find_package(OpenMP REQUIRED)
+else()
+    find_package(OpenMP REQUIRED)
+endif()
 ###############
 # Google Tests
 ###############
@@ -42,6 +49,8 @@ add_subdirectory(tests)
 
 add_executable(main main.cpp)
 
+# Apply OpenMP to your target instead of global flags
+target_link_libraries(main PRIVATE OpenMP::OpenMP_CXX)
 #########################
 # Documentation (DoxyGen)
 #########################
