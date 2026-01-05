@@ -6,6 +6,10 @@ pipeline{
         CTEST_BIN = '/opt/homebrew/bin/ctest'
     }
 
+    tools {
+        cmake 'default'
+    }
+
     stages{
 
         stage('Checkout Code'){
@@ -17,20 +21,24 @@ pipeline{
 
         stage('Configure and Build'){
             steps{
-                sh "${CMAKE_BIN} -S . -B build"
-                sh "${CMAKE_BIN} --build build -j 4"
+                sh "cmake -S . -B build"
+                sh "cmake--build build -j 4"
             }
         }
 
         stage('Test'){
             steps{
-                sh "${CTEST_BIN}  --test-dir build --output-on-failure"
+                script{
+                    def cmakePath = tool name: 'default', type: 'cmake'
+                    sh "${cmakePath}/bin/ctest  --test-dir build --output-on-failure"
+                }
+
             }
         }
 
         stage('Documentation'){
             steps{
-                sh "${CMAKE_BIN} --build build --target doc"
+                sh "cmake --build build --target doc"
             }
         }
     }
