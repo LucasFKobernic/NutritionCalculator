@@ -20,7 +20,7 @@ pipeline{
 
         stage('Documentation'){
             steps{
-                sh '/opt/homebrew/bin/cmake --build build --targe doc'
+                sh '/opt/homebrew/bin/cmake --build build --target doc'
             }
         }
     }
