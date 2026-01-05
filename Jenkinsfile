@@ -22,7 +22,7 @@ pipeline{
         stage('Configure and Build'){
             steps{
                 sh "cmake -S . -B build"
-                sh "cmake--build build -j 4"
+                sh "cmake --build build -j 4"
             }
         }
 
