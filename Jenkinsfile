@@ -2,8 +2,8 @@ pipeline{
     agent any
 
     environment{
-        CMAKE_BIN = 'cmake'
-        CTEST_BIN = 'ctest'
+        CMAKE_BIN = '/opt/homebrew/bin/cmake'
+        CTEST_BIN = '/opt/homebrew/bin/ctest'
     }
 
     stages{
