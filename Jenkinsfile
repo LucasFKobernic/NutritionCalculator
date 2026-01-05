@@ -1,6 +1,11 @@
 pipeline{
     agent any
 
+    environment{
+        CMAKE_BIN = 'cmake'
+        CTEST_BIN = 'ctest'
+    }
+
     stages{
 
         stage('Checkout Code'){
@@ -10,25 +15,36 @@ pipeline{
 
         }
 
-        stage('Build and Test'){
+        stage('Configure and Build'){
             steps{
-                sh '/opt/homebrew/bin/cmake -S . -B build'
-                sh '/opt/homebrew/bin/cmake --build build -j 4'
-                sh '/opt/homebrew/bin/ctest --test-dir build'
+                sh "${CMAKE_BIN} -S . -B build"
+                sh "${CMAKE_BIN} --build build -j $(nproc || sysctl -n hw.ncpu)"
+            }
+        }
+
+        stage('Test'){
+            steps{
+                sh "${CTEST_BIN}  --test-dir build --output-on-failure"
             }
         }
 
         stage('Documentation'){
             steps{
-                sh '/opt/homebrew/bin/cmake --build build --target doc'
+                sh "${CMAKE_BIN} --build build --target doc"
             }
         }
     }
 
     post {
-        always {
+        success{
+            echo 'Build and Tests successful!'
+            archiveArtifacts artifacts: 'doc/**', allowEmptyArchive: true
+        }
+        failure{
+            echo 'Build fehlgeschlagen. Übeprüfe die Logs.'
+        }
+        cleanup {
             sh 'rm -rf build'
-            sh 'rm -rf doc'
         }
     }
 }
