@@ -18,7 +18,7 @@ pipeline{
         stage('Configure and Build'){
             steps{
                 sh "${CMAKE_BIN} -S . -B build"
-                sh "${CMAKE_BIN} --build build -j $(nproc || sysctl -n hw.ncpu)"
+                sh "${CMAKE_BIN} --build build -j 4"
             }
         }
 
