@@ -7,7 +7,7 @@ pipeline{
     }
 
     tools {
-        cmake 'default'
+        "hudson.plugins.cmake.CmakeTool" 'default'
     }
 
     stages{
@@ -28,10 +28,7 @@ pipeline{
 
         stage('Test'){
             steps{
-                script{
-                    def cmakePath = tool name: 'default', type: 'cmake'
-                    sh "${cmakePath}/bin/ctest  --test-dir build --output-on-failure"
-                }
+                sh 'PATH=$(dirname $(which cmake)):$PATH ctest --test-dir build --output-on-failure'
 
             }
         }
