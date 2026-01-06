@@ -46,8 +46,11 @@ add_subdirectory(tests)
 #######################
 # Main Program
 #######################
+add_library(recipe src/Recipe.cpp)
 
+target_include_directories(recipe PUBLIC include)
 add_executable(main main.cpp)
+target_link_libraries(main PRIVATE recipe)
 
 # Apply OpenMP to your target instead of global flags
 target_link_libraries(main PRIVATE OpenMP::OpenMP_CXX)
